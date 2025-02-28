@@ -1,0 +1,31 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<CustomUser> SignInManager
+@inject UserManager<CustomUser> UserManager
+
+<ul class="navbar-nav bg-navbar">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        // Haal de huidige gebruiker opnieuw op vanuit UserManager
+        var currentUser = await UserManager.GetUserAsync(User);
+
+        <li class="nav-item">
+            <a class="nav-link text-light" asp-controller="Dashboard" asp-action="Index" title="Manage">
+                Hallo @currentUser?.Voornaam @currentUser?.Naam! <i class="bi bi-person"></i>
+            </a>
+        </li>
+        <li class="nav-item">
+            <form class="form-inline" asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home")">
+                <button type="submit" class="nav-link btn btn-link text-light">Afmelden</button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-light" asp-controller="Account" asp-action="Register">Registreren</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light" asp-controller="Account" asp-action="Login">Inloggen</a>
+        </li>
+    }
+</ul>

@@ -1,0 +1,216 @@
+/* Algemene instellingen */
+html {
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+html, body {
+    height: 100%; /* Zorg ervoor dat html en body de volledige hoogte van het scherm innemen */
+    margin: 0; /* Verwijder eventuele marges */
+    display: flex;
+    flex-direction: column; /* Flexbox om het lichaam in kolommen te structureren */
+}
+
+body {
+    background-color: white; /* Witte achtergrond */
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1; /* Zorgt ervoor dat de main de resterende ruimte inneemt */
+}
+
+/* Stijlen voor de focus van knoppen en formulieren */
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus,
+.form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+/* Navbar styling */
+.bg-navbar {
+    background-color: #3C3C3C !important; /* Achtergrondkleur navbar */
+}
+
+/* Button styling */
+.btn-primary {
+    background-color: #d4592b; /* Accentkleur voor primaire knoppen */
+    border-color: #d4592b; /* Accentkleur rand knoppen */
+}
+
+    .btn-primary:active {
+        background-color: #ff7043;
+        box-shadow: 0 4px #d4592b;
+        transform: translateY(2px);
+    }
+
+    .btn-primary:hover {
+        transform: scale(1.02);
+        background-color: #3C3C3C; /* Donkere accentkleur bij hover */
+        border-color: #3C3C3C; /* Donkere accentkleur bij hover */
+    }
+
+/* Styling voor kaarten (cards) */
+.card {
+    border: 1px solid #d4592b; /* Accentkleur rand kaarten */
+    transition: transform 0.3s; /* Smooth transition bij hover */
+}
+
+  
+
+/* Formulier styling */
+.form-row {
+    margin-bottom: 1rem; /* Ruimte tussen formulier rijen */
+}
+
+.form-group label {
+    font-weight: bold; /* Vetgedrukte labels voor formulieren */
+}
+
+/* CSS voor de hero section */
+.hero-section {
+    background-image: url('/images/hero-bg.jpg'); /* Achtergrondafbeelding */
+    background-size: cover;
+    background-position: center;
+    width: 100%;
+}
+
+    .hero-section h1 h2 {
+        font-size: 3rem;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .hero-section p {
+        font-size: 1.5rem;
+        font-family: 'Playfair Display', serif;
+    }
+
+/* Bestemmingen */
+.image-container {
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    position: relative;
+}
+
+    .image-container img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        height: auto;
+        width: 100%;
+        transform: translate(-50%, -50%);
+    }
+
+/* Footer styling */
+footer {
+    background-color: #3C3C3C;
+    padding: 1rem;
+    text-align: center;
+    margin-top: auto; /* Duwt de footer naar onderen */
+    width: 100%;
+}
+
+
+.large-thumbnail {
+    /*height: 300px;
+    width: 100%;
+    object-fit: cover;
+    object-position: center; */
+    width: 100%; /* Vult de breedte van de container */
+    height: auto; /* Behoudt de aspect ratio */
+    max-width: 600px; /* Limiteert de breedte tot maximaal 600px */
+}
+.no-link {
+    color: inherit; /* Neem de kleur van de parent element */
+    text-decoration: none; /* Verwijder de onderstreping */
+    cursor: pointer; /* Zorg ervoor dat de cursor er zoals een hand uitziet */
+}
+    .no-link:hover {
+        color: inherit; /* Houd dezelfde kleur als bij normale toestand */
+        text-decoration: none; /* Houd de onderstreping weg */
+    }
+.hero-section-dashboard {
+    background-image: url('/images/dashboard.jpg'); /* Achtergrondafbeelding */
+    background-size: cover;
+    background-position: center;
+    width: 100%;
+    height: 275px
+}
+
+    .hero-section-dashboard h1 h2 {
+        font-size: 3rem;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .hero-section-dashboard p {
+        font-size: 1.5rem;
+        font-family: 'Playfair Display', serif;
+    }
+
+
+/* Style voor het filter menu aan de linkerkant */
+.filter-menu {
+    height: 100%;
+    width: 300px; /* Zet de breedte van het filtermenu */
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: -300px; /* Begin met het menu buiten beeld (links) */
+    background-color: #f1f1f1;
+    overflow-x: hidden;
+    padding-top: 60px;
+    padding-left: 30px;
+    padding-right: 30px;
+    box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.5);
+}
+
+    .filter-menu.open {
+        left: 0; /* Verplaats het menu in beeld wanneer het geopend is */
+    }
+
+    .filter-menu .closebtn {
+        position: absolute;
+        top: 20px;
+        right: 25px;
+        font-size: 36px;
+        text-decoration: none;
+        color: #000;
+    }
+
+#openFilterMenu {
+    cursor: pointer;
+}
+
+.suggestions {
+    border: 1px solid #ccc;
+    background: white;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+    .suggestions .list-group-item {
+        padding: 8px 12px;
+        cursor: pointer;
+    }
+
+        .suggestions .list-group-item:hover {
+            background-color: #f0f0f0;
+        }
+.nav-link:not(.active) {
+    color: #D4592B;
+}
+.btn.w-100:hover {
+    transform: none; /* Verhindert de vergroting van de knop */
+    box-shadow: none; /* Verhindert eventuele schaduwen bij hover */
+}

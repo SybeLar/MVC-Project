@@ -1,0 +1,256 @@
+﻿@using System.Globalization
+@model MVC_Project_BSL.Models.Groepsreis
+
+<h1>De reis naar @Model.Bestemming?.BestemmingsNaam</h1>
+
+<!-- Foto en beschrijving naast elkaar -->
+<div class="row">
+	<!-- Linkerzijde: Foto's (50% breedte) -->
+	<div class="col-md-6">
+		@if (Model.Bestemming?.Fotos != null && Model.Bestemming.Fotos.Any())
+		{
+			<div class="row">
+				@foreach (var foto in Model.Bestemming.Fotos)
+				{
+					<div class="col-12 mb-3">
+						<!-- Volledige breedte in de 50% kolom, met wat marge -->
+						<img src="~/images/@foto.Naam" alt="Foto van @Model.Bestemming.BestemmingsNaam"
+							 class="large-thumbnail img-thumbnail img-fluid" />
+					</div>
+				}
+			</div>
+		}
+		else
+		{
+			<p>Geen foto's beschikbaar</p>
+		}
+	</div>
+
+	<!-- Rechterzijde: Beschrijving (50% breedte) -->
+	<div class="col-md-6 d-flex flex-column">
+		<h2>@Model.Bestemming?.BestemmingsNaam</h2>
+		<p>@Model.Bestemming?.Beschrijving</p>
+
+		<h5>Activiteiten</h5>
+		@if (Model.Programmas != null && Model.Programmas.Any())
+		{
+			<ul>
+				@foreach (var activiteit in Model.Programmas)
+				{
+					<li>
+						<strong>@activiteit.Activiteit.Naam</strong>: @activiteit.Activiteit.Beschrijving
+					</li>
+				}
+			</ul>
+		}
+		else
+		{
+			<p>Nog geen activiteiten beschikbaar voor deze reis.</p>
+		}
+		@if (User.IsInRole("Beheerder") || User.IsInRole("Verantwoordelijke") || User.IsInRole("Hoofdmonitor"))
+		{
+			<a asp-controller="Onkosten" asp-action="Index" asp-route-groepsreisId="@Model.Id" class="btn btn-secondary mt-4">
+				Onkosten Beheren
+			</a>
+		}
+	</div>
+
+</div>
+
+<hr />
+
+
+<!-- Details van de groepsreis -->
+<div>
+	<h4>Details</h4>
+	<dl class="row">
+		<dt class="col-sm-2">Begindatum</dt>
+		<dd class="col-sm-10">@Model.Begindatum.ToString("dd-MM-yyyy")</dd>
+
+		<dt class="col-sm-2">Einddatum</dt>
+		<dd class="col-sm-10">@Model.Einddatum.ToString("dd-MM-yyyy")</dd>
+
+		<dt class="col-sm-2">Prijs</dt>
+		<dd class="col-sm-10">@Model.Prijs.ToString("C", new CultureInfo("nl-BE"))</dd>
+
+		<dt class="col-sm-2">Leeftijdscategorie</dt>
+		<dd class="col-sm-10">@Model.Bestemming?.MinLeeftijd - @Model.Bestemming?.MaxLeeftijd</dd>
+
+		<dt class="col-sm-2">Aantal deelnemers</dt>
+		<dd class="col-sm-10">@Model.Deelnemers.Count()</dd>
+	</dl>
+</div>
+@if (User.IsInRole("Beheerder"))
+{
+	<div class="col-md-6">
+		<div>
+			<button type="button" class="btn btn-primary mb-4 w-50" data-bs-toggle="modal" data-bs-target="#ingeschrevenMonitorenModal">
+				Bekijk ingeschreven monitoren
+			</button>
+		</div>
+		<div>
+				<button type="button" class="btn btn-primary mb-4 w-50" data-bs-toggle="modal" data-bs-target="#ingeschrevenDeelnemersModal">
+					Bekijk ingeschreven deelnemers
+				</button>
+		</div>
+		
+	</div>
+	<!-- Modal voor Ingeschreven Monitoren -->
+	<div class="modal fade" id="ingeschrevenMonitorenModal" tabindex="-1" aria-labelledby="ingeschrevenMonitorenModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="ingeschrevenMonitorenModalLabel">Ingeschreven Monitoren</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="row mb-3">
+						<div class="col">
+							<input type="text" class="form-control user-filter-input" id="filterIngeschrevenMonitoren" placeholder="Filter op volledige naam...">
+						</div>
+					</div>
+					@if (Model.Monitoren.Any())
+					{
+						<table class="table">
+							<thead>
+								<tr>
+									<th>Naam</th>
+									<th>Hoofdmonitor</th>
+									<th>Telefoonnummer</th>
+									<th>Emailadres</th>
+									
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var monitor in Model.Monitoren)
+								{
+									<tr class="user-row">
+										<td class="user-fullname">@monitor.Monitor.Persoon?.Voornaam @monitor.Monitor.Persoon?.Naam</td>
+										<td>@(monitor.Monitor.IsHoofdMonitor ? "Ja" : "Nee")</td>
+										<td>@monitor.Monitor.Persoon.TelefoonNummer</td>
+										<td>@monitor.Monitor.Persoon.Email</td>
+										
+									</tr>
+								}
+							</tbody>
+						</table>
+						<p id="noUsersMessage" class="text-center text-muted" style="display: none;">Geen deelnemers gevonden voor de geselecteerde filters.</p>
+
+					}
+					else
+					{
+						<div class="alert alert-warning">
+							Geen monitoren geregistreerd voor deze groepsreis.
+						</div>
+					}
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Sluiten</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+		<!-- Modal voor Ingeschreven Deelnemers -->
+		<div class="modal fade" id="ingeschrevenDeelnemersModal" tabindex="-1" aria-labelledby="ingeschrevenDeelnemersModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="ingeschrevenDeelnemersModalLabel">Ingeschreven Deelnemers</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<div class="row mb-3">
+							<div class="col">
+								<input type="text" class="form-control user-filter-input" id="filterIngeschrevenDeelnemers" placeholder="Filter op volledige naam...">
+							</div>
+						</div>
+						@if (Model.Deelnemers.Any())
+						{
+							<table class="table">
+								<thead>
+									<tr>
+										<th>Naam</th>
+										<th>Leeftijd</th>
+										<th>Telefoonnummer</th>
+										<th>Ouder/Voogd</th>
+										
+									</tr>
+								</thead>
+								<tbody>
+									@foreach (var deelnemer in Model.Deelnemers)
+									{
+										var geboortedatum = deelnemer.Kind.Geboortedatum;
+										var leeftijd = DateTime.Now.Year - geboortedatum.Year;
+										if (DateTime.Now < geboortedatum.AddYears(leeftijd)) leeftijd--;
+
+										<tr class="user-row">
+											<td class="user-fullname">@deelnemer.Kind.Voornaam @deelnemer.Kind.Naam</td>
+											<td>@leeftijd jaar</td>
+											<td>@deelnemer.Kind.Persoon.TelefoonNummer</td>
+											<td>@deelnemer.Kind.Persoon.Voornaam @deelnemer.Kind.Persoon.Naam</td>
+										 
+										</tr>
+									}
+								</tbody>
+							</table>
+							<p id="noUsersMessage" class="text-center text-muted" style="display: none;">Geen deelnemers gevonden voor de geselecteerde filters.</p>
+
+						}
+						else
+						{
+							<div class="alert alert-warning">
+								Geen deelnemers geregistreerd voor deze groepsreis.
+							</div>
+						}
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Sluiten</button>
+					</div>
+				</div>
+			</div>
+		</div>
+}
+
+
+<p>
+    <a href="javascript:history.back()" class="btn btn-primary">Terug</a>
+</p>
+@section Scripts {
+
+	<script>
+		$(document).ready(function () {
+			// Functie voor filtering
+			function filterUsers(modalId) {
+				var volledigeNaamFilter = $(modalId).find('.user-filter-input').val().toLowerCase();
+				var hasVisibleUsers = false;
+
+				// Loop door alle rijen en controleer de voornaam
+				$(modalId).find('.user-row').each(function () {
+					var volledigeNaam = $(this).find('.user-fullname').text().toLowerCase();
+					var matches = volledigeNaam.includes(volledigeNaamFilter) || !volledigeNaamFilter;
+					$(this).toggle(matches);
+
+					if (matches) {
+						hasVisibleUsers = true;
+					}
+				});
+
+				// Toon of verberg het 'Geen deelnemers gevonden' bericht
+				$(modalId).find('#noUsersMessage').toggle(!hasVisibleUsers);
+			}
+
+			// Event listeners voor elk filter in de modals
+			$('#filterIngeschrevenMonitoren').on('input', function () {
+				filterUsers('#ingeschrevenMonitorenModal');
+			});
+			$('#filterIngeschrevenDeelnemers').on('input', function () {
+				filterUsers('#ingeschrevenDeelnemersModal');
+			});
+
+			// Voeg vergelijkbare logica toe voor de andere modals indien nodig
+		});
+
+	</script>
+}
+
